@@ -19,12 +19,9 @@ Bullet_Damage = 34
 Enemy_Hp = 100
 Kill_Score = 100
 Initial_Velocity = 10
+PLAYER_HP = 300
 
 
-class Player(arcade.Sprite):
-    def __init__(self):
-        super().__init__("assets/Spaceship_tut.png", 0.5)
-        (self.center_x, self.center_y) = Starting_Location
 
 class Enemy(arcade.Sprite):
     def __init__(self, position, velocity):
@@ -73,6 +70,14 @@ class Laser2(arcade.Sprite):
         #Moves the missile
         self.center_x += self.dx
         self.center_y += self.dy
+
+class Player(arcade.Sprite):
+    def __init__(self):
+        super().__init__("assets/Spaceship_tut.png", 0.5)
+        (self.center_x, self.center_y) = Starting_Location
+        self.hp = PLAYER_HP
+        self.moving_left = False
+        self.moving_right = False
 
 class Window(arcade.Window):
 
@@ -146,15 +151,19 @@ class Window(arcade.Window):
                 e.dy = abs(e.dy) * -1
 
         self.laser2_list.update()
-        for p in self.player_list:
-            damage = arcade.check_for_collision_with_list(p,self.laser2_list)
-            for d in damage:
-                p.hp = p.hp in damage
-                d.kill()
-                if p.hp < 0:
-                    p.kill()
-                    self.alive = False
+        for e in self.enemy_list:
+            if (random.random() < .05):
+                self.laser2_list.append(Laser2((e.center_x, e.center_y - 15), (0, -10), 100))
 
+        damage = arcade.check_for_collision_with_list(self.player1,self.laser2_list)
+        for d in damage:
+            self.player1.hp = self.player1.hp - d.damage
+            d.kill()
+            if self.player1.hp <= 0:
+                self.player1.kill()
+                self.died = True
+    
+#come back
             
     def on_draw(self):
         """ Called whenever we need to draw the window. """
