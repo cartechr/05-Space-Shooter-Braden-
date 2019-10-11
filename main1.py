@@ -109,11 +109,6 @@ class Window(arcade.Window):
         arcade.draw_text(f"Ya done lost :()",600, 500, arcade.color.WHITE, 60)
 
     def setup(self):
-
-        self.won = False
-        self.died = False
-
-        
         '''
         Set up enemies
         '''
@@ -125,6 +120,9 @@ class Window(arcade.Window):
             enemy = Enemy((x,y), (dx,dy))
             self.enemy_list.append(enemy)
         self.background = arcade.load_texture('assets/space.jpg')
+
+        self.won = False
+        self.died = False
         
 
     def update(self, delta_time):
@@ -162,6 +160,7 @@ class Window(arcade.Window):
             if self.player1.hp <= 0:
                 self.player1.kill()
                 self.died = True
+                arcade.close_window()
     
 #come back
             
@@ -173,7 +172,7 @@ class Window(arcade.Window):
         self.player1.draw()
 
         if self.won:
-            self.winner()
+            self.winner
         elif self.died:
             self.end
         else:
